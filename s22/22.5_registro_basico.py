@@ -1,14 +1,20 @@
 from tkinter import *
+import sqlite3
 
 clientes = []
 
 # bloque de funciones
 def guardar_datos():
+    conexion = sqlite3.connect("db/tkinter.db")
+    cursor = conexion.cursor()
     nombre_in = info_nombre.get()
     apellido_in = info_apellido.get()
-    cedula_in = info_cedula.get()
-    clientes.append(nombre_in +" " + apellido_in + " "+ cedula_in)
+    id_cliente = info_cedula.get()
+    clientes.append(nombre_in +" " + apellido_in + " "+ id_cliente)
     mensaje_salida["text"] = "Cliente Guardado"
+    datos = (id_cliente, nombre_in,apellido_in)
+    cursor.execute("INSERT INTO  clientes (id, nombre, apellido) VALUES(?, ?, ?)", datos)
+    conexion.commit()
     ventana.after(2000,borrar_datos)
 
 def borrar_datos():
